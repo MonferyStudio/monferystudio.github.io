@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonferyStudio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 2rem 2rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            margin-top: 0.75rem;
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            padding: 3rem 2rem;
+            max-width: 1250px;
+            width: 100%;
+        }
+
+        .card {
+            background: #14141f;
+            border: 1px solid #1e1e2e;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: #2a2a3e;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge-released {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+        }
+
+        .badge-wip {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        /* itch.io embed */
+        .card-embed {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .itch-embed iframe {
+            display: block;
+            width: 552px;
+            max-width: 100%;
+            height: 167px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .platforms {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0 1.5rem 1.5rem;
+            flex: 1;
+        }
+
+        .platforms-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .platform-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .platform-icon {
+            width: 36px;
+            height: 36px;
+            fill: #888;
+        }
+
+        /* Pixcivia content */
+        .pixcivia-content {
+            padding: 0 1.5rem 1.5rem;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .yt-channel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+            padding: 1rem;
+            background: #1a1a28;
+            border-radius: 10px;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .card-tech {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tech-icon {
+            height: 20px;
+            width: auto;
+            opacity: 0.5;
+        }
+
+        .yt-channel:hover {
+            background: #222235;
+        }
+
+        .yt-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2a2a3e;
+        }
+
+        .yt-channel-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .yt-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .yt-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .yt-stat-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #e0e0e0;
+        }
+
+        .yt-stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .yt-channel-link {
+            font-size: 0.8rem;
+            color: #818cf8;
+        }
+
+        /* Carousel */
+        .carousel {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+            height: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s ease;
+            height: 100%;
+        }
+
+        .carousel-track img {
+            width: 100%;
+            flex-shrink: 0;
+            object-fit: cover;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .carousel:hover .carousel-btn {
+            opacity: 1;
+        }
+
+        .carousel-btn-prev { left: 6px; }
+        .carousel-btn-next { right: 6px; }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .carousel-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .carousel-dot.active {
+            background: #fff;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 2rem;
+            color: #444;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 750px) {
+            .projects {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MonferyStudio</h1>
+        <p>Mes projets</p>
+    </header>
+
+    <section class="projects">
+
+        <!-- KANDL -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <h2>KANDL</h2>
+                    <span class="card-badge badge-released">Sorti</span>
+                </div>
+                <div class="card-tech">
+                    <svg class="tech-icon" viewBox="0 0 24 24" fill="#54C5F8" xmlns="http://www.w3.org/2000/svg"><path d="M14.314 0L2.3 12 6 15.7 21.684 0h-7.37zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.37z"/></svg>
+                    <svg class="tech-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M67.3 0L196.9 0 256 59.2 256 196.9 196.9 256 128 256 0 128 0 67.3z" fill="#01579B"/><path d="M196.9 0L67.3 0 0 67.3 0 128 128 0z" fill="#0175C2" opacity="0.7"/><path d="M128 256L196.9 256 256 196.9 256 128z" fill="#01579B" opacity="0.7"/><path d="M67.3 0L196.9 0 256 59.2 256 196.9 196.9 256 128 256 0 128 0 67.3z" fill="none"/></svg>
+                </div>
+            </div>
+            <div class="card-embed">
+                <div class="itch-embed">
+                    <iframe src="https://itch.io/embed/4281400" loading="lazy"><a href="https://monfery.itch.io/kandl">KANDL by Monfery</a></iframe>
+                </div>
+            </div>
+            <div class="platforms">
+                <span class="platforms-label">Disponible sur</span>
+                <div class="platform-icons">
+                    <!-- Windows -->
+                    <svg class="platform-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.5L9.8 2.2v9.4H0V3.5zm0 17L9.8 21.8v-9.3H0v8zm10.8-18.8L24 0v11.6H10.8V1.7zm0 20.6L24 24V12.4H10.8v9.9z"/></svg>
+                    <!-- Browser -->
+                    <svg class="platform-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <!-- Android -->
+                    <svg class="platform-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.27-.86-.31-.16-.69-.04-.86.27l-1.86 3.22c-1.24-.57-2.63-.89-4.11-.89-1.48 0-2.87.32-4.11.89L6.37 5.71c-.16-.31-.54-.43-.86-.27-.31.16-.43.55-.27.86L7.08 9.48C3.72 11.19 1.36 14.46 1 18.35h22.67c-.36-3.89-2.72-7.16-6.07-8.87zM7 15.25c-.69 0-1.25-.56-1.25-1.25S6.31 12.75 7 12.75s1.25.56 1.25 1.25S7.69 15.25 7 15.25zm10 0c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pixcivia -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <h2>Pixcivia</h2>
+                    <span class="card-badge badge-wip">En cours</span>
+                </div>
+                <div class="card-tech">
+                    <svg class="tech-icon" viewBox="0 0 128 128" fill="#aaa" xmlns="http://www.w3.org/2000/svg"><path d="M82.48 63.578l22.418-38.402 10.832 38.402-10.832 38.398zm-10.926 6.238l22.422 38.406-38.402-10.418-22.852-27.988zm22.422-50.641L71.554 57.581H26.73L49.578 29.59l38.402-10.418zM128 55.288L115.098 8.16l-47.14 12.664L56.89 35.754l-23.375-.22L0 63.58l33.516 28.05 23.375-.22 11.07 14.93L115.1 119.003 128 71.87l-7.543-8.292z"/></svg>
+                    <svg class="tech-icon" viewBox="0 0 24 24" fill="#68217A" xmlns="http://www.w3.org/2000/svg"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm-1.15 4.88c.84 0 1.63.25 2.37.74.74.5 1.26 1.12 1.56 1.88l-1.96 1.13a2.3 2.3 0 0 0-.82-1.01 1.97 1.97 0 0 0-1.15-.36c-.7 0-1.3.27-1.78.82-.48.54-.72 1.26-.72 2.14 0 .9.24 1.62.72 2.17.48.54 1.08.82 1.78.82.44 0 .84-.12 1.18-.37.35-.25.62-.58.8-1l1.97 1.13c-.32.76-.84 1.38-1.56 1.87-.73.49-1.53.74-2.39.74-1.32 0-2.42-.47-3.3-1.41-.87-.94-1.31-2.12-1.31-3.55 0-1.4.44-2.57 1.31-3.52.89-.94 1.98-1.42 3.3-1.42zm5.77 2.55h.9v1.2h.9V7.43h.9v1.2h.9v.9h-.9v1.2h.9v.9h-.9v1.2h-.9v-1.2h-.9v1.2h-.9v-1.2h-.9v-.9h.9v-1.2h-.9v-.9zm.9.9v1.2h.9v-1.2h-.9z"/></svg>
+                    <svg class="tech-icon" viewBox="0 0 24 24" fill="#FF0000" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.2c-.3-1-1-1.8-2-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.5.5c-1 .3-1.7 1.1-2 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1 1 1.8 2 2.1 1.9.5 9.5.5 9.5.5s7.6 0 9.5-.5c1-.3 1.7-1.1 2-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.4 3.6-6.4 3.6z"/></svg>
+                </div>
+            </div>
+            <div class="pixcivia-content">
+                <a href="https://youtube.com/@monferystudio" target="_blank" rel="noopener" class="yt-channel">
+                    <img class="yt-avatar" src="icon.png" alt="MonferyStudio">
+                    <span class="yt-channel-name">MonferyStudio</span>
+                    <div class="yt-stats">
+                        <div class="yt-stat">
+                            <span class="yt-stat-value">117</span>
+                            <span class="yt-stat-label">abonn&eacute;s</span>
+                        </div>
+                        <div class="yt-stat">
+                            <span class="yt-stat-value">14</span>
+                            <span class="yt-stat-label">vid&eacute;os</span>
+                        </div>
+                    </div>
+                    <span class="yt-channel-link">Voir la cha&icirc;ne &rarr;</span>
+                </a>
+                <div class="carousel" id="carousel">
+                    <div class="carousel-track" id="carousel-track"></div>
+                    <button class="carousel-btn carousel-btn-prev" onclick="moveCarousel(-1)">&#8249;</button>
+                    <button class="carousel-btn carousel-btn-next" onclick="moveCarousel(1)">&#8250;</button>
+                    <div class="carousel-dots" id="carousel-dots"></div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+        <img id="lightbox-img" src="" alt="Screenshot">
+    </div>
+
+    <footer>&copy; 2026 MonferyStudio</footer>
+
+    <script>
+        const track = document.getElementById('carousel-track');
+        const dots = document.getElementById('carousel-dots');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        let images = [];
+        let current = 0;
+
+        // Auto-detect screenshots: try loading 1.png, 2.png, ... until one fails
+        (async function loadScreenshots() {
+            let i = 1;
+            while (true) {
+                const ok = await new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = `screenshots/${i}.png`;
+                });
+                if (!ok) break;
+
+                const img = document.createElement('img');
+                img.src = `screenshots/${i}.png`;
+                img.alt = `Pixcivia screenshot ${i}`;
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    lightboxImg.src = img.src;
+                    lightbox.classList.add('active');
+                });
+                track.appendChild(img);
+
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot' + (i === 1 ? ' active' : '');
+                dot.onclick = () => goTo(i - 1);
+                dots.appendChild(dot);
+
+                i++;
+            }
+            images = track.querySelectorAll('img');
+        })();
+
+        function goTo(i) {
+            current = i;
+            track.style.transform = `translateX(-${current * 100}%)`;
+            dots.querySelectorAll('.carousel-dot').forEach((d, j) =>
+                d.classList.toggle('active', j === current));
+        }
+
+        function moveCarousel(dir) {
+            if (images.length === 0) return;
+            goTo((current + dir + images.length) % images.length);
+        }
+    </script>
+</body>
+</html>
